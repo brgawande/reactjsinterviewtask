@@ -81,12 +81,13 @@ const AllProducts = () => {
                 label="Choose Category"
                 onChange={handleChange}
               >
-                <MenuItem value={"beauty"}>Beauty</MenuItem>
-                <MenuItem value={"home-decoration"}>Home-Decoration</MenuItem>
-                <MenuItem value={"kitchen-accessories"}>
-                  kitchen-accessories
-                </MenuItem>
-                <MenuItem value={"mens-shoes"}>Mens-shoes</MenuItem>
+                {productss && productss.length > 0
+                  ? productss.map((item) => (
+                      <MenuItem value={item?.category}>
+                        {item?.category}
+                      </MenuItem>
+                    ))
+                  : null}
               </Select>
             </FormControl>
           </Box>

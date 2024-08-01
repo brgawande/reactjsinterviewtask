@@ -10,8 +10,10 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { IoCartOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Badge from "@mui/material/Badge";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -26,6 +28,8 @@ function classNames(...classes) {
 export default function Header() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const cartItems = useSelector((state) => state.cart.items);
+  console.log("cartitems", cartItems);
   useEffect(() => {
     // Check if a token exists in local storage
     const token = localStorage.getItem("jwtToken");
@@ -75,15 +79,20 @@ export default function Header() {
                 >
                   home
                 </Link>
-                <Link
-                  to={"/cart"}
-                  className={classNames(
-                    "text-gray-300 hover:bg-gray-700 hover:text-white",
-                    "rounded-md px-3 py-2 text-sm font-medium"
-                  )}
+                <Badge
+                  badgeContent={cartItems && cartItems.length}
+                  color="primary"
                 >
-                  cart
-                </Link>
+                  <Link
+                    to={"/cart"}
+                    className={classNames(
+                      "text-gray-300 hover:bg-gray-700 hover:text-white",
+                      "rounded-md px-3 py-2 text-sm font-medium"
+                    )}
+                  >
+                    cart
+                  </Link>
+                </Badge>
               </div>
             </div>
           </div>
