@@ -12,16 +12,13 @@ const cartSlice = createSlice({
       console.log("state", state);
       console.log(item);
 
-      // Check if the item already exists in the cart
       const existingItem = state.items.find((i) => i.id === item.id);
 
       if (existingItem) {
-        // Update quantity of existing item
-        state.totalPrice -= existingItem.price * existingItem.quantity; // Remove old total
+        state.totalPrice -= existingItem.price * existingItem.quantity;
         existingItem.quantity += item.quantity;
-        state.totalPrice += existingItem.price * existingItem.quantity; // Add new total
+        state.totalPrice += existingItem.price * existingItem.quantity;
       } else {
-        // Add new item to the cart
         state.items.push(item);
         state.totalPrice += item.price * item.quantity;
       }
