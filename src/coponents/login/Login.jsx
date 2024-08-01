@@ -8,29 +8,38 @@ export default function Login() {
   const submithandler = async (e) => {
     e.preventDefault();
     setError("");
+    console.log(email, password);
 
     try {
       const response = await fetch("https://dummyjson.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: email,
+          username: email, // Assuming email is used as the username here
           password: password,
-          expiresInMins: 30,
+          expiresInMins: 30, // Optional, defaults to 60
         }),
       });
 
+      // Check if response is OK (status code 200-299)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log("Response data:", data);
 
       if (data.token) {
         localStorage.setItem("jwtToken", data.token);
+        localStorage.setItem(
+          "userInfo",
+          JSON.stringify({
+            image: data.image,
+          })
+        );
         console.log("Token stored:", data.token);
       } else {
-        setError("Login failed: " + (data.message || "Unknown error"));
+        setError("Login failed: No token received.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -67,7 +76,6 @@ export default function Login() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   name="email"
-                  type="email"
                   required
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

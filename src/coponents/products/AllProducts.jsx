@@ -5,54 +5,22 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-
-const products = [
-  {
-    id: 1,
-    name: "Earthen Bottle",
-    href: "#",
-    price: "$48",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    imageAlt:
-      "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 2,
-    name: "Nomad Tumbler",
-    href: "#",
-    price: "$35",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    imageAlt:
-      "Olive drab green insulated bottle with flared screw lid and flat top.",
-  },
-  {
-    id: 3,
-    name: "Focus Paper Refill",
-    href: "#",
-    price: "$89",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
-    imageAlt:
-      "Person using a pen to cross a task off a productivity paper card.",
-  },
-  {
-    id: 4,
-    name: "Machined Mechanical Pencil",
-    href: "#",
-    price: "$35",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
-    imageAlt:
-      "Hand holding black machined steel mechanical pencil with brass tip and top.",
-  },
-];
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/slices/cartSlice";
 
 const AllProducts = () => {
   const [productss, setProductss] = useState([]);
 
   const [categories, setCategories] = React.useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(20);
+
+  const dispatch = useDispatch();
+
+  const addToCartHandler = async ({ id, price, title, image }) => {
+    console.log(id, price, title, image);
+    await dispatch(addToCart({ id, price, title, image, quantity: 1 }));
+  };
 
   const handleChange = (event) => {
     setCategories(event.target.value);
@@ -83,6 +51,19 @@ const AllProducts = () => {
     : productss;
 
   console.log(filteredProducts);
+
+  //   const indexOfLastProduct = currentPage * productsPerPage;
+  //   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  //   const currentProducts = filteredProducts.slice(
+  //     indexOfFirstProduct,
+  //     indexOfLastProduct
+  //   );
+
+  //   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  //   const handlePageChange = (pageNumber) => {
+  //     setCurrentPage(pageNumber);
+  //   };
 
   return (
     <div>
@@ -116,11 +97,13 @@ const AllProducts = () => {
               {filteredProducts && filteredProducts.length > 0
                 ? filteredProducts.map((product) => (
                     <a key={product?.id} className="group">
-                      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                        <img
-                          src={product?.images}
-                          className="h-full w-full object-cover object-center group-hover:opacity-75"
-                        />
+                      <div className="aspect-h-1 h-[300px] aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                        {product?.images && (
+                          <img
+                            src={product?.images[0]}
+                            className="h-full w-full object-contain object-center group-hover:opacity-75"
+                          />
+                        )}
                       </div>
                       <div className="px-2 flex items-center justify-between">
                         <div>
@@ -128,10 +111,22 @@ const AllProducts = () => {
                             {product?.title}
                           </h3>
                           <p className="mt-1 text-lg font-medium text-gray-900">
-                            {Math.floor(product?.price * 10)}
+                            {product?.price}
                           </p>
                         </div>
-                        <Button variant="contained">Add to Cart</Button>
+                        <Button
+                          onClick={() =>
+                            addToCartHandler({
+                              id: product?.id,
+                              price: product?.price,
+                              title: product?.title,
+                              image: product?.images[0],
+                            })
+                          }
+                          variant="contained"
+                        >
+                          Add to Cart
+                        </Button>
                       </div>
                     </a>
                   ))
