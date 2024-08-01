@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   Dialog,
@@ -10,6 +8,7 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart } from "../../store/slices/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCart() {
   const dispatch = useDispatch();
@@ -18,8 +17,15 @@ export default function ProductCart() {
   const cartItems = useSelector((state) => state.cart.items);
   const totalPrice = useSelector((state) => state.cart.totalPrice);
 
+  const navigate = useNavigate();
+
   const removeHandler = (id) => {
     dispatch(removeFromCart(id));
+  };
+
+  const closehandler = () => {
+    setOpen(false);
+    navigate("/");
   };
 
   return (
@@ -49,7 +55,7 @@ export default function ProductCart() {
                     <div className="ml-3 flex h-7 items-center">
                       <button
                         type="button"
-                        onClick={() => setOpen(false)}
+                        onClick={closehandler}
                         className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
                       >
                         <span className="absolute -inset-0.5" />
